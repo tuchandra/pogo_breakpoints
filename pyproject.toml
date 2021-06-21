@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "pvp_damage"
+version = "0.1.0"
+description = "Pokemon GO PVP breakpoints and bulkpoints simulator"
+authors = ["Tushar Chandra <me@tusharc.dev>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.65.2"
+pydantic = "^1.8.2"
+requests = "^2.25.1"
+
+[tool.poetry.dev-dependencies]
+black = "^21.6b0"
+pytest = "^6.2.4"
+isort = "^5.8.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
