@@ -1,8 +1,8 @@
-from typing import Any, Optional, Union
+from typing import Any, Union
 
 from pydantic import BaseModel, Field
 
-from pvp_damage.constants import GAMEMASTER, TYPE_MATCHUPS, Effectiveness, PokemonType
+from .constants import GAMEMASTER, TYPE_MATCHUPS, Effectiveness, PokemonType
 
 
 class FastMove(BaseModel):

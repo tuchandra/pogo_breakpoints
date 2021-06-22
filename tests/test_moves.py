@@ -1,7 +1,7 @@
 import pytest
 
-from pvp_damage.constants import Effectiveness, PokemonType
-from pvp_damage.moves import (
+from pvp_damage.models.constants import Effectiveness, PokemonType
+from pvp_damage.models.moves import (
     get_charged_move,
     get_charged_move_by_id,
     get_fast_move,

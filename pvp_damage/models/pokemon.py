@@ -3,8 +3,8 @@ from typing import Any, Optional
 
 from pydantic import BaseModel, Field
 
-from pvp_damage.constants import CP_MULTIPLIERS, GAMEMASTER, PokemonType
-from pvp_damage.moves import (
+from .constants import CP_MULTIPLIERS, GAMEMASTER, PokemonType
+from .moves import (
     ChargedMove,
     FastMove,
     Moveset,

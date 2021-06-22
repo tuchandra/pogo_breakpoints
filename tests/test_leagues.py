@@ -1,7 +1,7 @@
 import pytest
 
-from pvp_damage.pokemon import get_species
-from pvp_damage.leagues import GREAT_LEAGUE, ULTRA_LEAGUE, ULTRA_PREMIER
+from pvp_damage.models.pokemon import get_species
+from pvp_damage.models.leagues import GREAT_LEAGUE, ULTRA_LEAGUE, ULTRA_PREMIER
 
 
 @pytest.mark.parametrize(

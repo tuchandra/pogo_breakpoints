@@ -1,8 +1,8 @@
 from math import floor
 
-from pvp_damage.constants import SHADOW_ATTACK_MULT, SHADOW_DEF_MULT, STAB_BONUS
-from pvp_damage.moves import Move, get_move_effectiveness
-from pvp_damage.pokemon import Pokemon, PokemonSpecies
+from pvp_damage.models.constants import SHADOW_ATTACK_MULT, SHADOW_DEF_MULT, STAB_BONUS
+from pvp_damage.models.moves import Move, get_move_effectiveness
+from pvp_damage.models.pokemon import Pokemon, PokemonSpecies
 
 
 def is_stab(move: Move, pokemon: PokemonSpecies) -> bool:

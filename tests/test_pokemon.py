@@ -2,8 +2,8 @@ from math import floor
 
 import pytest
 
-from pvp_damage.constants import PokemonType
-from pvp_damage.pokemon import Pokemon, get_species, get_species_by_id
+from pvp_damage.models.constants import PokemonType
+from pvp_damage.models.pokemon import Pokemon, get_species, get_species_by_id
 
 
 @pytest.mark.parametrize(

@@ -1,9 +1,9 @@
 import json
 from pathlib import Path
 
-from pydantic import BaseModel, Field
-from pvp_damage.pokemon import PokemonSpecies, get_species_by_id
-from pvp_damage.moves import Moveset, get_charged_move_by_id, get_fast_move_by_id
+from pydantic import BaseModel
+from .pokemon import PokemonSpecies, get_species_by_id
+from .moves import Moveset, get_charged_move_by_id, get_fast_move_by_id
 
 
 class League(BaseModel):

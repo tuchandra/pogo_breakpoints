@@ -2,10 +2,10 @@ from typing import TypedDict
 
 import pytest
 
-from pvp_damage.constants import PokemonType
+from pvp_damage.models.constants import PokemonType
+from pvp_damage.models.moves import ChargedMove, FastMove, Move, get_fast_move
+from pvp_damage.models.pokemon import Pokemon, PokemonSpecies, get_species
 from pvp_damage.damage import calculate_damage, is_stab
-from pvp_damage.moves import ChargedMove, FastMove, Move, get_fast_move
-from pvp_damage.pokemon import Pokemon, PokemonSpecies, get_species
 
 
 @pytest.fixture
