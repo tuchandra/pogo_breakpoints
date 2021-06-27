@@ -100,12 +100,36 @@ def compute_iv_possibilities(species: PokemonSpecies, cp_limit: int) -> dict[IVs
     return out
 
 
-def compute_breakpoints(
+def compute_attacker_damage(
     attacker: Pokemon,
-    defender: Pokemon,
+    defender: PokemonSpecies,
     move: Move,
-    cp_limit: League,
+    cp_limit: int,
 ) -> None:
-    """ """
+    """
+    Compute the damage that a given attacker does to all possible defenders of a
+    given species. This assumes that all the defenders are powered up to the max
+    level possible (including best buddy / level 51 where applicable).
+    """
+
+    all_defenders = compute_iv_possibilities(defender, cp_limit)
+    all_defenders = sorted(all_defenders.values(), key=lambda mon: mon.defense_stat)
+    min_defense_mon = all_defenders[0]
+    max_defense_mon = all_defenders[1]
+
+    # first, check if the min and max damage are different at all
+    min_damage = calculate_damage(move, attacker, max_defense_mon)
+    max_damage = calculate_damage(move, attacker, min_defense_mon)
+    if min_damage == max_damage:
+        return
+
+    # otherwise, find the bulkpoints and just compute the damage
+    damage_vs_all = {
+        defender: calculate_damage(move, attacker, defender) for defender in all_defenders
+    }
+
+    print(damage_vs_all)
+
+    # find the point where damage changes
 
     ...

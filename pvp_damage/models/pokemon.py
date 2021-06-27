@@ -81,6 +81,10 @@ class Pokemon(BaseModel):
         return (self.attack_stat, self.defense_stat, self.stamina_stat)
 
     @property
+    def stat_product(self) -> float:
+        return self.attack_stat * self.defense_stat * int(self.stamina_stat)
+
+    @property
     def cp(self) -> int:
         return max(
             10,
