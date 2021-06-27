@@ -2,10 +2,16 @@ from typing import TypedDict
 
 import pytest
 
-from pvp_damage.models.constants import PokemonType
+from pvp_damage.models.constants import PokemonType, IVs
 from pvp_damage.models.moves import ChargedMove, FastMove, Move, get_fast_move
 from pvp_damage.models.pokemon import Pokemon, PokemonSpecies, get_species
-from pvp_damage.damage import calculate_damage, is_stab
+from pvp_damage.damage import (
+    calculate_damage,
+    compute_iv_possibilities,
+    find_max_level_for_league,
+    is_stab,
+    find_max_level_for_league,
+)
 
 
 @pytest.fixture
@@ -239,3 +245,124 @@ def test_serperior_ultra_breakpoints():
 
     assert calculate_damage(get_fast_move("Vine Whip"), serperior_hundo, lapras) == 7
     assert calculate_damage(get_fast_move("Vine Whip"), serperior_rk1, lapras) == 6
+
+
+@pytest.mark.parametrize(
+    ["species_name", "cp_limit", "level"],
+    [
+        # great league
+        ("Abomasnow", 1500, 22),
+        ("Stunfisk", 1500, 24),
+        ("Umbreon", 1500, 24.5),
+        ("Azumarill", 1500, 36),
+        ("Venusaur", 1500, 19),
+        ("Pelipper", 1500, 24.5),
+        ("Raichu (Alolan)", 1500, 22.5),
+        ("Galvantula", 1500, 23.5),
+        # ultra league
+        ("Gallade", 2500, 28),
+        ("Venusaur", 2500, 34),
+        ("Empoleon", 2500, 30),
+        ("Machamp", 2500, 28.5),
+        ("Abomasnow", 2500, 44.5),
+        ("Talonflame", 2500, 50),
+        ("Stunfisk (Galarian)", 2500, 51),
+        # silly tests for master league
+        ("Abomasnow", 10000, 51),
+        ("Dialga", 10000, 51),
+        ("Mewtwo", 10000, 51),
+        ("Eevee", 10000, 51),
+        ("Unfezant", 10000, 51),
+    ],
+)
+def test_find_hundos_for_league(species_name: str, cp_limit: int, level: float):
+    """
+    Tests for find_max_level_for_league, but using hundos only - since those are
+    easiest to parameterize and compute.
+    """
+
+    species = get_species(species_name)
+    ivs = (15, 15, 15)
+    mon = find_max_level_for_league(species, ivs, cp_limit)
+
+    # test that the mon is the right level & within the CP limit
+    assert mon.level == level
+    assert mon.cp <= cp_limit
+
+    # test that this is _maximal_ CP (that the next level exceeds the limit)
+    if level < 51:
+        half_level_higher = Pokemon(species=species, level=level + 0.5, ivs=(15, 15, 15))
+        assert half_level_higher.cp > cp_limit
+
+
+def test_compute_iv_possibilities_azu():
+    """
+    Tests for compute_iv_possibilities, using Great League Azumarill of different IVs.
+    We don't parameterize this test because it's (much) faster to call
+    compute_iv_possibilities once.
+    """
+
+    ivs_and_levels = [
+        ((15, 15, 15), 36),
+        ((15, 15, 14), 36),
+        ((15, 12, 11), 37),
+        ((9, 15, 14), 39.5),
+        ((10, 15, 10), 39.5),
+        ((8, 15, 15), 40),  # nasty edge case
+        ((8, 14, 14), 40),
+        ((8, 14, 13), 40.5),
+        ((6, 14, 14), 41.5),
+        ((2, 12, 15), 44.5),
+        ((0, 15, 15), 45.5),
+        ((2, 8, 8), 47),
+        ((1, 8, 8), 47.5),
+        ((0, 8, 8), 48.5),
+        ((0, 4, 4), 50),
+        ((0, 0, 0), 51),
+    ]
+
+    azu = get_species("Azumarill")
+    all_ivs = compute_iv_possibilities(azu, 1500)
+
+    assert len(all_ivs) == 16 ** 3
+
+    for (ivs, level) in ivs_and_levels:
+        mon = all_ivs[ivs]
+        assert mon.level == level
+
+        # test that this is _maximal_ CP (that the next level exceeds the limit)
+        if level < 51:
+            half_level_higher = Pokemon(species=azu, level=level + 0.5, ivs=ivs)
+            assert half_level_higher.cp > 1500
+
+
+def test_compute_iv_possibilities_alt():
+    """
+    Tests for compute_iv_possibilities, using Great League Altaria of different IVs.
+    """
+
+    ivs_and_levels = [
+        ((0, 15, 15), 28.5),
+        ((0, 14, 15), 29),
+        ((0, 15, 8), 29.5),
+        ((0, 7, 15), 29.5),
+        ((0, 7, 9), 30),
+        ((0, 7, 5), 30.5),
+        ((1, 3, 3), 31),
+        ((1, 1, 1), 31.5),
+        ((0, 0, 0), 32.5),
+    ]
+
+    alt = get_species("Altaria")
+    all_ivs = compute_iv_possibilities(alt, 1500)
+
+    assert len(all_ivs) == 16 ** 3
+
+    for (ivs, level) in ivs_and_levels:
+        mon = all_ivs[ivs]
+        assert mon.level == level
+
+        # test that this is _maximal_ CP (that the next level exceeds the limit)
+        if level < 51:
+            half_level_higher = Pokemon(species=alt, level=level + 0.5, ivs=ivs)
+            assert half_level_higher.cp > 1500

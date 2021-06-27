@@ -16,6 +16,9 @@ class FastMove(BaseModel):
     class Config:
         frozen = True
 
+    def __repr__(self) -> str:
+        return f"{self.name} ({self.type.value}; {self.power} power, {self.energy} energy, {self.turns} turns)"
+
 
 class ChargedMove(BaseModel):
     move_id: str
@@ -27,6 +30,9 @@ class ChargedMove(BaseModel):
 
     class Config:
         frozen = True
+
+    def __repr__(self) -> str:
+        return f"{self.name} ({self.type.value}; {self.power} power, {self.energy} energy)"
 
 
 Move = Union[FastMove, ChargedMove]

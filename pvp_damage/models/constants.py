@@ -9,6 +9,9 @@ STAB_BONUS = 1.2
 SHADOW_ATTACK_MULT = 1.2
 SHADOW_DEF_MULT = 5 / 6
 
+IVs = tuple[int, int, int]
+Stats = tuple[float, float, float]
+
 
 class Effectiveness(Enum):
     super_effective = 1.6
@@ -36,6 +39,9 @@ class PokemonType(Enum):
     dark = "dark"
     steel = "steel"
     fairy = "fairy"
+
+    def __repr__(self) -> str:
+        return f"{self.value}-type"
 
 
 CP_MULTIPLIERS = {
@@ -141,15 +147,18 @@ CP_MULTIPLIERS = {
     50: 0.840300023555755,
     50.5: 0.842803729034748,
     51: 0.845300018787384,
-    51.5: 0.847803702398935,
-    52: 0.850300014019012,
-    52.5: 0.852803676019539,
-    53: 0.855300009250640,
-    53.5: 0.857803649892077,
-    54: 0.860300004482269,
-    54.5: 0.862803624012168,
-    55: 0.865299999713897,
+    # these are only used for Rocket battles
+    # 51.5: 0.847803702398935,
+    # 52: 0.850300014019012,
+    # 52.5: 0.852803676019539,
+    # 53: 0.855300009250640,
+    # 53.5: 0.857803649892077,
+    # 54: 0.860300004482269,
+    # 54.5: 0.862803624012168,
+    # 55: 0.865299999713897,
 }
+
+MAX_CPM = max(CP_MULTIPLIERS.values())
 
 
 class OneTypeMatchups(BaseModel):

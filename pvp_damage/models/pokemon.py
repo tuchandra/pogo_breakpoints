@@ -3,7 +3,7 @@ from typing import Any, Optional
 
 from pydantic import BaseModel, Field
 
-from .constants import CP_MULTIPLIERS, GAMEMASTER, PokemonType
+from .constants import CP_MULTIPLIERS, GAMEMASTER, PokemonType, IVs, Stats
 from .moves import (
     ChargedMove,
     FastMove,
@@ -33,11 +33,19 @@ class PokemonSpecies(BaseModel):
             return all(getattr(self, x) == getattr(other, x) for x in self.__fields__)
         return super().__eq__(other)
 
+    def cp(self, level: float, att_iv: int, def_iv: int, sta_iv: int):
+        attack, defense, stamina = (
+            self.attack + att_iv,
+            self.defense + def_iv,
+            self.stamina + sta_iv,
+        )
+        return 0.1 * (CP_MULTIPLIERS[level] ** 2) * attack * sqrt(defense * stamina)
+
 
 class Pokemon(BaseModel):
     species: PokemonSpecies
     level: float = Field(ge=1, le=51, multiple_of=0.5)
-    ivs: tuple[int, int, int] = Field(ge=0, le=15)
+    ivs: IVs = Field(ge=0, le=15)
     moveset: Optional[Moveset] = None
 
     @property
@@ -69,7 +77,7 @@ class Pokemon(BaseModel):
         return (self.species.stamina + self.stamina_iv) * self.cpm
 
     @property
-    def stats(self) -> tuple[float, float, float]:
+    def stats(self) -> Stats:
         return (self.attack_stat, self.defense_stat, self.stamina_stat)
 
     @property

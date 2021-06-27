@@ -2,7 +2,7 @@ from math import floor
 
 import pytest
 
-from pvp_damage.models.constants import PokemonType
+from pvp_damage.models.constants import PokemonType, IVs, Stats
 from pvp_damage.models.pokemon import Pokemon, get_species, get_species_by_id
 
 
@@ -102,9 +102,7 @@ def test_get_species_by_id(id: str, types: set[str], one_fast_move: str, one_cha
         ("Bagon", 20, (14, 15, 15), (88, 64, 85), 656),
     ],
 )
-def test_pokemon_stats(
-    species_name: str, level: int, ivs: tuple[int, int, int], stats: tuple[int, int, int], cp: int
-):
+def test_pokemon_stats(species_name: str, level: int, ivs: IVs, stats: Stats, cp: int):
     species = get_species(species_name)
     pokemon = Pokemon(
         species=species,
