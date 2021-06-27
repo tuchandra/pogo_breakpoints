@@ -10,7 +10,6 @@ from pvp_damage.damage import (
     compute_iv_possibilities,
     find_max_level_for_league,
     is_stab,
-    find_max_level_for_league,
 )
 
 
@@ -293,6 +292,79 @@ def test_find_hundos_for_league(species_name: str, cp_limit: int, level: float):
     if level < 51:
         half_level_higher = Pokemon(species=species, level=level + 0.5, ivs=(15, 15, 15))
         assert half_level_higher.cp > cp_limit
+
+
+@pytest.mark.parametrize(
+    ["species_name", "ivs", "level", "cp"],
+    [
+        ("Charizard", (0, 13, 15), 35, 2500),
+        ("Roserade", (4, 15, 15), 31.5, 2499),
+        ("Machamp", (1, 13, 15), 31, 2499),
+        ("Swampert", (13, 10, 12), 30.5, 2498),
+        ("Roserade", (10, 13, 14), 30.5, 2498),
+        ("Sirfetch'd", (6, 9, 10), 32.5, 2497),
+        ("Venusaur", (15, 13, 15), 34.5, 2494),
+        ("Nidoqueen", (8, 14, 14), 43.5, 2493),
+        ("Golem (Alolan)", (11, 6, 15), 31.5, 2491),
+        ("Gengar", (0, 15, 15), 34, 2488),
+        ("Gyarados", (3, 15, 14), 27, 2486),
+        ("Crustle", (11, 15, 14), 40, 2485),
+        ("Empoleon", (3, 14, 5), 35, 2483),
+        ("Gallade", (6, 14, 11), 29.5, 2481),
+    ],
+)
+def test_find_max_level_ultra(species_name: str, ivs: IVs, level: float, cp: int):
+    """
+    Tests for find_max_level_for_league, using Pokemon out of my UL collection in PoGo.
+    """
+
+    species = get_species(species_name)
+    cp_limit = 2500
+    mon = find_max_level_for_league(species, ivs, cp_limit)
+
+    # test that the mon is the right level & CP
+    assert mon.level == level
+    assert mon.cp == cp
+
+    # test that this is _maximal_ CP (that the next level exceeds the limit)
+    half_level_higher = Pokemon(species=species, level=level + 0.5, ivs=(15, 15, 15))
+    assert half_level_higher.cp > cp_limit
+
+
+@pytest.mark.parametrize(
+    ["species_name", "ivs", "level", "cp"],
+    [
+        ("Ninetales", (5, 11, 9), 25, 1500),
+        ("Machamp", (2, 8, 15), 18.5, 1500),
+        ("Skarmory", (10, 12, 13), 26, 1500),
+        ("Talonflame", (1, 15, 10), 26, 1499),
+        ("Gengar", (1, 12, 13), 19.5, 1499),
+        ("Drifblim", (3, 11, 12), 24, 1499),
+        ("Victreebel", (5, 12, 12), 23, 1499),
+        ("Perrserker", (15, 8, 14), 22.5, 1499),
+        ("Azumarill", (10, 14, 15), 39, 1499),
+        ("Jellicent", (5, 5, 14), 24.5, 1499),
+        ("Pelipper", (10, 12, 9), 26, 1499),
+        ("Roserade", (4, 15, 14), 18.5, 1499),
+        ("Cradily", (0, 15, 8), 26.5, 1498),
+    ],
+)
+def test_find_max_level_great(species_name: str, ivs: IVs, level: float, cp: int):
+    """
+    Tests for find_max_level_for_league, using Pokemon out of my GL collection in PoGo.
+    """
+
+    species = get_species(species_name)
+    cp_limit = 1500
+    mon = find_max_level_for_league(species, ivs, cp_limit)
+
+    # test that the mon is the right level & CP
+    assert mon.level == level
+    assert mon.cp == cp
+
+    # test that this is _maximal_ CP (that the next level exceeds the limit)
+    half_level_higher = Pokemon(species=species, level=level + 0.5, ivs=(15, 15, 15))
+    assert half_level_higher.cp > cp_limit
 
 
 def test_compute_iv_possibilities_azu():
