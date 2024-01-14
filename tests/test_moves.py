@@ -12,7 +12,7 @@ from pvp_damage.models.moves import (
 
 
 @pytest.mark.parametrize(
-    ["name", "energy", "power", "turns"],
+    ("name", "energy", "power", "turns"),
     [
         ("Incinerate", 20, 15, 5),
         ("Vine Whip", 8, 5, 2),
@@ -34,7 +34,7 @@ def test_get_fast_move(name: str, energy: int, power: int, turns: int):
 
 
 @pytest.mark.parametrize(
-    ["name", "energy", "power"],
+    ("name", "energy", "power"),
     [
         ("Shadow Sneak", 45, 50),
         ("Skull Bash", 75, 130),
@@ -61,7 +61,7 @@ def test_get_charged_move(name: str, energy: int, power: int):
 
 
 @pytest.mark.parametrize(
-    ["move_id", "energy", "power", "turns"],
+    ("move_id", "energy", "power", "turns"),
     [
         ("INCINERATE", 20, 15, 5),
         ("VINE_WHIP", 8, 5, 2),
@@ -83,7 +83,7 @@ def test_get_fast_move_by_id(move_id: str, energy: int, power: int, turns: int):
 
 
 @pytest.mark.parametrize(
-    ["move_id", "energy", "power"],
+    ("move_id", "energy", "power"),
     [
         ("SHADOW_SNEAK", 45, 50),
         ("SKULL_BASH", 75, 130),
@@ -110,7 +110,7 @@ def test_get_charged_move_by_id(move_id: str, energy: int, power: int):
 
 
 @pytest.mark.parametrize(
-    ["attacker", "defender", "output"],
+    ("attacker", "defender", "output"),
     [
         (PokemonType.normal, PokemonType.ghost, Effectiveness.immune),
         (PokemonType.normal, PokemonType.rock, Effectiveness.not_very_effective),
@@ -152,13 +152,13 @@ def test_type_effectiveness(attacker: PokemonType, defender: PokemonType, output
 
 
 @pytest.mark.parametrize(
-    ["attacker", "defender", "output"],
+    ("attacker", "defender", "output"),
     [
-        (PokemonType.electric, {PokemonType.dragon, PokemonType.ground}, 0.625 ** 3),
-        (PokemonType.electric, {PokemonType.ground, PokemonType.grass}, 0.625 ** 3),
+        (PokemonType.electric, {PokemonType.dragon, PokemonType.ground}, 0.625**3),
+        (PokemonType.electric, {PokemonType.ground, PokemonType.grass}, 0.625**3),
         (PokemonType.water, {PokemonType.ground, PokemonType.grass}, 1),
         (PokemonType.water, {PokemonType.ice, PokemonType.grass}, 0.625),
-        (PokemonType.dragon, {PokemonType.fairy, PokemonType.normal}, 0.625 ** 2),
+        (PokemonType.dragon, {PokemonType.fairy, PokemonType.normal}, 0.625**2),
         (PokemonType.dark, {PokemonType.ghost, PokemonType.dark}, 1),
         (PokemonType.dark, {PokemonType.ghost}, 1.6),
     ],

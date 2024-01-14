@@ -1,9 +1,9 @@
 from math import floor, sqrt
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
-from .constants import CP_MULTIPLIERS, GAMEMASTER, PokemonType, IVs, Stats
+from .constants import CP_MULTIPLIERS, GAMEMASTER, IVs, PokemonType, Stats
 from .moves import (
     ChargedMove,
     FastMove,
@@ -17,12 +17,12 @@ class PokemonSpecies(BaseModel):
     number: int
     id: str
     name: str
-    types: set[PokemonType]
+    types: frozenset[PokemonType]
     attack: float
     defense: float
     stamina: float
-    fast_moves: set[FastMove]
-    charged_moves: set[ChargedMove]
+    fast_moves: frozenset[FastMove]
+    charged_moves: frozenset[ChargedMove]
     is_shadow: bool = False
 
     class Config:
@@ -46,7 +46,7 @@ class Pokemon(BaseModel):
     species: PokemonSpecies
     level: float = Field(ge=1, le=51, multiple_of=0.5)
     ivs: IVs = Field(ge=0, le=15)
-    moveset: Optional[Moveset] = None
+    moveset: Moveset | None = None
 
     @property
     def attack_iv(self) -> int:
@@ -88,10 +88,7 @@ class Pokemon(BaseModel):
     def cp(self) -> int:
         return max(
             10,
-            floor(
-                0.1
-                * sqrt(self.attack_stat * self.attack_stat * self.defense_stat * self.stamina_stat)
-            ),
+            floor(0.1 * sqrt(self.attack_stat * self.attack_stat * self.defense_stat * self.stamina_stat)),
         )
 
     class Config:
@@ -126,9 +123,7 @@ def _load_pokemon_from_gamemaster(gamemaster: Any) -> list[PokemonSpecies]:
     non_shadow_pokemon = [
         mon
         for mon in all_pokemon
-        if ("shadow" not in mon["speciesId"])
-        and ("_xs" not in mon["speciesId"])
-        and ("_xl" not in mon["speciesId"])
+        if ("shadow" not in mon["speciesId"]) and ("_xs" not in mon["speciesId"]) and ("_xl" not in mon["speciesId"])
     ]
     pokemon = [
         PokemonSpecies(

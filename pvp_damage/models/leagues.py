@@ -2,8 +2,9 @@ import json
 from pathlib import Path
 
 from pydantic import BaseModel
-from .pokemon import PokemonSpecies, get_species_by_id
+
 from .moves import Moveset, get_charged_move_by_id, get_fast_move_by_id
+from .pokemon import PokemonSpecies, get_species_by_id
 
 
 class League(BaseModel):

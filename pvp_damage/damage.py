@@ -11,7 +11,6 @@ from pvp_damage.models.constants import (
 )
 from pvp_damage.models.moves import Move, get_move_effectiveness
 from pvp_damage.models.pokemon import Pokemon, PokemonSpecies
-from pvp_damage.models.leagues import League
 
 
 def is_stab(move: Move, pokemon: PokemonSpecies) -> bool:
@@ -29,12 +28,8 @@ def calculate_damage(
     multipliers = stab_bonus * type_effectiveness
 
     # shadow effects
-    effective_attack = attacker.attack_stat * (
-        SHADOW_ATTACK_MULT if attacker.species.is_shadow else 1
-    )
-    effective_defense = defender.defense_stat * (
-        SHADOW_DEF_MULT if defender.species.is_shadow else 1
-    )
+    effective_attack = attacker.attack_stat * (SHADOW_ATTACK_MULT if attacker.species.is_shadow else 1)
+    effective_defense = defender.defense_stat * (SHADOW_DEF_MULT if defender.species.is_shadow else 1)
 
     # these are magic numbers, yes; they appear in the damage formula this way
     # 1.3 is a multiplier that only appears in PVP (not PVE); 0.5 is just there
@@ -115,7 +110,7 @@ def compute_attacker_damage(
     all_defenders = compute_iv_possibilities(defender, cp_limit)
     all_defenders = sorted(all_defenders.values(), key=lambda mon: mon.defense_stat)
     min_defense_mon = all_defenders[0]
-    max_defense_mon = all_defenders[1]
+    max_defense_mon = all_defenders[-1]
 
     # first, check if the min and max damage are different at all
     min_damage = calculate_damage(move, attacker, max_defense_mon)
@@ -124,11 +119,12 @@ def compute_attacker_damage(
         return
 
     # otherwise, find the bulkpoints and just compute the damage
-    damage_vs_all = {
-        defender: calculate_damage(move, attacker, defender) for defender in all_defenders
-    }
+    damage_vs_all = {defender: calculate_damage(move, attacker, defender) for defender in all_defenders}
+    damage_partition: dict[int, set[Pokemon]] = {damage: set() for damage in range(min_damage, max_damage + 1)}
+    for mon, damage in damage_vs_all.items():
+        damage_partition[damage].add(mon)
 
-    print(damage_vs_all)
+    print(damage_partition)
 
     # find the point where damage changes
 

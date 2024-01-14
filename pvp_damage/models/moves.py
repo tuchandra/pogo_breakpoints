@@ -40,7 +40,7 @@ Move = Union[FastMove, ChargedMove]
 
 class Moveset(BaseModel):
     fast: FastMove
-    charged: list[ChargedMove] = Field(min_items=1, max_items=2)
+    charged: tuple[ChargedMove, ChargedMove | None]
 
 
 def get_fast_move(move_name: str) -> FastMove:

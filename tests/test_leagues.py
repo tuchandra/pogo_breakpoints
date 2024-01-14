@@ -1,11 +1,11 @@
 import pytest
 
-from pvp_damage.models.pokemon import get_species
 from pvp_damage.models.leagues import GREAT_LEAGUE, ULTRA_LEAGUE, ULTRA_PREMIER
+from pvp_damage.models.pokemon import get_species
 
 
 @pytest.mark.parametrize(
-    ["name", "shadow", "expected_present"],
+    ("name", "shadow", "expected_present"),
     [
         # regular non-shadows
         ("Azumarill", False, True),
@@ -38,7 +38,7 @@ def test_great_league(name: str, shadow: bool, expected_present: bool):
 
 
 @pytest.mark.parametrize(
-    ["name", "shadow", "expected_present"],
+    ("name", "shadow", "expected_present"),
     [
         # no GL pokemon
         ("Azumarill", False, False),
@@ -71,7 +71,7 @@ def test_ultra_league(name: str, shadow: bool, expected_present: bool):
 
 
 @pytest.mark.parametrize(
-    ["name", "shadow", "expected_present"],
+    ("name", "shadow", "expected_present"),
     [
         # no GL pokemon
         ("Azumarill", False, False),

@@ -2,27 +2,24 @@ from typing import TypedDict
 
 import pytest
 
-from pvp_damage.models.constants import PokemonType, IVs
-from pvp_damage.models.moves import ChargedMove, FastMove, Move, get_fast_move
-from pvp_damage.models.pokemon import Pokemon, PokemonSpecies, get_species
 from pvp_damage.damage import (
     calculate_damage,
+    compute_attacker_damage,
     compute_iv_possibilities,
     find_max_level_for_league,
     is_stab,
 )
+from pvp_damage.models.constants import IVs, PokemonType
+from pvp_damage.models.moves import ChargedMove, FastMove, Move, get_fast_move, get_move_by_name
+from pvp_damage.models.pokemon import Pokemon, PokemonSpecies, get_species
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_moves() -> dict[str, Move]:
-    _fast_move_type = TypedDict(
-        "_fast_move_type", {"move_id": str, "power": int, "energy": int, "turns": int}
-    )
+    _fast_move_type = TypedDict("_fast_move_type", {"move_id": str, "power": int, "energy": int, "turns": int})
     default_fast: _fast_move_type = {"move_id": "any", "power": 4, "energy": 4, "turns": 4}
 
-    _charged_move_type = TypedDict(
-        "_charged_move_type", {"move_id": str, "power": int, "energy": int}
-    )
+    _charged_move_type = TypedDict("_charged_move_type", {"move_id": str, "power": int, "energy": int})
     default_charged: _charged_move_type = {"move_id": "any", "power": 4, "energy": 4}
 
     return {
@@ -35,24 +32,20 @@ def mock_moves() -> dict[str, Move]:
         "Dragonbreath": FastMove(name="Dragonbreath", type=PokemonType.dragon, **default_fast),
         "Metal Claw": FastMove(name="Metal Claw", type=PokemonType.steel, **default_fast),
         # charged moves
-        "Dynamic Punch": ChargedMove(
-            name="Dynamic Punch", type=PokemonType.fighting, **default_charged
-        ),
+        "Dynamic Punch": ChargedMove(name="Dynamic Punch", type=PokemonType.fighting, **default_charged),
         "Shadow Ball": ChargedMove(name="Shadow Ball", type=PokemonType.ghost, **default_charged),
         "Shadow Punch": ChargedMove(name="Shadow Punch", type=PokemonType.ghost, **default_charged),
         "Flame Wheel": ChargedMove(name="Flame Wheel", type=PokemonType.fire, **default_charged),
         "Flame Charge": ChargedMove(name="Flame Charge", type=PokemonType.fire, **default_charged),
         "Thunder": ChargedMove(name="Thunder", type=PokemonType.electric, **default_charged),
-        "Thunder Punch": ChargedMove(
-            name="Thunder Punch", type=PokemonType.electric, **default_charged
-        ),
+        "Thunder Punch": ChargedMove(name="Thunder Punch", type=PokemonType.electric, **default_charged),
         "Ice Punch": ChargedMove(name="Ice Punch", type=PokemonType.ice, **default_charged),
         "Dragon Claw": ChargedMove(name="Dragon Claw", type=PokemonType.dragon, **default_charged),
         "Iron Head": ChargedMove(name="Iron Head", type=PokemonType.steel, **default_charged),
     }
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_species() -> dict[str, PokemonSpecies]:
     def make_species(name: str, types: set[str]) -> PokemonSpecies:
         return PokemonSpecies(
@@ -83,7 +76,7 @@ def mock_species() -> dict[str, PokemonSpecies]:
 
 
 @pytest.mark.parametrize(
-    ["move_name", "pokemon_name", "expected"],
+    ("move_name", "pokemon_name", "expected"),
     [
         # charged moves
         ("Dynamic Punch", "Machamp", True),
@@ -95,7 +88,6 @@ def mock_species() -> dict[str, PokemonSpecies]:
         ("Iron Head", "Swampert", False),
         ("Ice Punch", "Swampert", False),
         # fast moves
-        ("Metal Claw", "Swampert", False),
         ("Metal Claw", "Swampert", False),
         ("Metal Claw", "Stunfisk (Galarian)", True),
         ("Metal Claw", "Stunfisk", False),
@@ -247,7 +239,7 @@ def test_serperior_ultra_breakpoints():
 
 
 @pytest.mark.parametrize(
-    ["species_name", "cp_limit", "level"],
+    ("species_name", "cp_limit", "level"),
     [
         # great league
         ("Abomasnow", 1500, 22),
@@ -295,7 +287,7 @@ def test_find_hundos_for_league(species_name: str, cp_limit: int, level: float):
 
 
 @pytest.mark.parametrize(
-    ["species_name", "ivs", "level", "cp"],
+    ("species_name", "ivs", "level", "cp"),
     [
         ("Charizard", (0, 13, 15), 35, 2500),
         ("Roserade", (4, 15, 15), 31.5, 2499),
@@ -332,7 +324,7 @@ def test_find_max_level_ultra(species_name: str, ivs: IVs, level: float, cp: int
 
 
 @pytest.mark.parametrize(
-    ["species_name", "ivs", "level", "cp"],
+    ("species_name", "ivs", "level", "cp"),
     [
         ("Ninetales", (5, 11, 9), 25, 1500),
         ("Machamp", (2, 8, 15), 18.5, 1500),
@@ -396,9 +388,9 @@ def test_compute_iv_possibilities_azu():
     azu = get_species("Azumarill")
     all_ivs = compute_iv_possibilities(azu, 1500)
 
-    assert len(all_ivs) == 16 ** 3
+    assert len(all_ivs) == 16**3
 
-    for (ivs, level) in ivs_and_levels:
+    for ivs, level in ivs_and_levels:
         mon = all_ivs[ivs]
         assert mon.level == level
 
@@ -428,9 +420,9 @@ def test_compute_iv_possibilities_alt():
     alt = get_species("Altaria")
     all_ivs = compute_iv_possibilities(alt, 1500)
 
-    assert len(all_ivs) == 16 ** 3
+    assert len(all_ivs) == 16**3
 
-    for (ivs, level) in ivs_and_levels:
+    for ivs, level in ivs_and_levels:
         mon = all_ivs[ivs]
         assert mon.level == level
 
@@ -438,3 +430,13 @@ def test_compute_iv_possibilities_alt():
         if level < 51:
             half_level_higher = Pokemon(species=alt, level=level + 0.5, ivs=ivs)
             assert half_level_higher.cp > 1500
+
+
+def test_compute_attacker_damage():
+    """Not really sure how to test this ..."""
+
+    serp = get_species("Serperior")
+    my_serp = Pokemon(species=serp, level=50, ivs=(15, 15, 15))
+
+    swamp = get_species("Swampert")
+    compute_attacker_damage(my_serp, swamp, get_move_by_name("Vine Whip"), 2500)

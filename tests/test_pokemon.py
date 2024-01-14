@@ -2,12 +2,12 @@ from math import floor
 
 import pytest
 
-from pvp_damage.models.constants import PokemonType, IVs, Stats
+from pvp_damage.models.constants import IVs, PokemonType, Stats
 from pvp_damage.models.pokemon import Pokemon, get_species, get_species_by_id
 
 
 @pytest.mark.parametrize(
-    ["name", "types", "one_fast_move", "one_charged_move"],
+    ("name", "types", "one_fast_move", "one_charged_move"),
     [
         ("Stunfisk (Galarian)", {"ground", "steel"}, "Mud Shot", "Earthquake"),
         ("Stunfisk", {"electric", "ground"}, "Mud Shot", "Discharge"),
@@ -32,7 +32,7 @@ def test_get_species(name: str, types: set[str], one_fast_move: str, one_charged
 
 
 @pytest.mark.parametrize(
-    ["name", "types", "one_fast_move", "one_charged_move"],
+    ("name", "types", "one_fast_move", "one_charged_move"),
     [
         ("Nidoqueen", {"poison", "ground"}, "Poison Jab", "Earth Power"),
         ("Beedrill", {"poison", "bug"}, "Poison Jab", "Drill Run"),
@@ -52,7 +52,7 @@ def test_get_species_shadows(name: str, types: set[str], one_fast_move: str, one
 
 
 @pytest.mark.parametrize(
-    ["id", "types", "one_fast_move", "one_charged_move"],
+    ("id", "types", "one_fast_move", "one_charged_move"),
     [
         ("stunfisk_galarian", {"ground", "steel"}, "Mud Shot", "Earthquake"),
         ("stunfisk", {"electric", "ground"}, "Mud Shot", "Discharge"),
@@ -86,7 +86,7 @@ def test_get_species_by_id(id: str, types: set[str], one_fast_move: str, one_cha
 
 
 @pytest.mark.parametrize(
-    ["species_name", "level", "ivs", "stats", "cp"],
+    ("species_name", "level", "ivs", "stats", "cp"),
     [
         # these test cases come from pokemon I have + calcy IV + gostadium rank checker
         ("Dialga", 40, (15, 15, 13), (229, 178, 172), 4020),
