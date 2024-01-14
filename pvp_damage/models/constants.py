@@ -1,15 +1,19 @@
 import json
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 STAB_BONUS = 1.2
 SHADOW_ATTACK_MULT = 1.2
 SHADOW_DEF_MULT = 5 / 6
 
-type IVs = tuple[int, int, int]
+
+type Level = Annotated[float, Field(ge=1, le=51, multiple_of=0.5)]
+type IV = Annotated[int, Field(ge=0, le=15)]
+type IVs = tuple[IV, IV, IV]
+
 type Stats = tuple[float, float, float]
 
 

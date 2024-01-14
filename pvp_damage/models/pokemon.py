@@ -1,9 +1,9 @@
 from math import floor, sqrt
-from typing import Annotated, Any
+from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 
-from .constants import CP_MULTIPLIERS, GAMEMASTER, PokemonType, Stats
+from .constants import CP_MULTIPLIERS, GAMEMASTER, IVs, Level, PokemonType, Stats
 from .moves import (
     ChargedMove,
     FastMove,
@@ -24,6 +24,7 @@ class PokemonSpecies(BaseModel):
     fast_moves: frozenset[FastMove]
     charged_moves: frozenset[ChargedMove]
     is_shadow: bool = False
+
     model_config = ConfigDict(frozen=True)
 
     def __eq__(self, other: Any):
@@ -31,7 +32,7 @@ class PokemonSpecies(BaseModel):
             return all(getattr(self, x) == getattr(other, x) for x in self.model_fields)
         return super().__eq__(other)
 
-    def cp(self, level: float, att_iv: int, def_iv: int, sta_iv: int):
+    def cp(self, level: float, att_iv: int, def_iv: int, sta_iv: int):  # unused
         attack, defense, stamina = (
             self.attack + att_iv,
             self.defense + def_iv,
@@ -40,13 +41,10 @@ class PokemonSpecies(BaseModel):
         return 0.1 * (CP_MULTIPLIERS[level] ** 2) * attack * sqrt(defense * stamina)
 
 
-type IV = Annotated[int, Field(ge=0, le=15)]
-
-
 class Pokemon(BaseModel):
     species: PokemonSpecies
-    level: float = Field(ge=1, le=51, multiple_of=0.5)
-    ivs: tuple[IV, IV, IV]
+    level: Level
+    ivs: IVs
     moveset: Moveset | None = None
 
     @property
