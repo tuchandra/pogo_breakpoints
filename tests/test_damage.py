@@ -51,13 +51,13 @@ def mock_species() -> dict[str, PokemonSpecies]:
         return PokemonSpecies(
             id="",
             name=name,
-            types={PokemonType(t) for t in types},
+            types=frozenset(PokemonType(t) for t in types),
             number=12,
             attack=0,
             defense=0,
             stamina=0,
-            fast_moves=set(),
-            charged_moves=set(),
+            fast_moves=frozenset(),
+            charged_moves=frozenset(),
         )
 
     return {
