@@ -15,8 +15,7 @@ class League(BaseModel):
 
 def _get_meta_from_file(name: str) -> list[tuple[PokemonSpecies, Moveset]]:
     p = Path("data") / f"{name}.json"
-    with open(p) as f:
-        data = json.load(f)
+    data = json.loads(p.read_text())
 
     meta_list: list[tuple[PokemonSpecies, Moveset]] = []
     for item in data:

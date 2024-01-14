@@ -130,12 +130,12 @@ def _load_pokemon_from_gamemaster(gamemaster: Any) -> list[PokemonSpecies]:
             number=pokemon["dex"],
             id=pokemon["speciesId"],
             name=pokemon["speciesName"],
-            types={PokemonType(t) for t in pokemon["types"] if t != "none"},
+            types=frozenset(PokemonType(t) for t in pokemon["types"] if t != "none"),
             attack=pokemon["baseStats"]["atk"],
             defense=pokemon["baseStats"]["def"],
             stamina=pokemon["baseStats"]["hp"],
-            fast_moves={get_fast_move_by_id(move) for move in pokemon["fastMoves"]},
-            charged_moves={get_charged_move_by_id(move) for move in pokemon["chargedMoves"]},
+            fast_moves=frozenset(get_fast_move_by_id(move) for move in pokemon["fastMoves"]),
+            charged_moves=frozenset(get_charged_move_by_id(move) for move in pokemon["chargedMoves"]),
         )
         for pokemon in non_shadow_pokemon
     ]

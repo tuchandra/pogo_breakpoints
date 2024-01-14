@@ -1,4 +1,5 @@
-from typing import Any, Union
+from collections.abc import Iterable
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -35,7 +36,7 @@ class ChargedMove(BaseModel):
         return f"{self.name} ({self.type.value}; {self.power} power, {self.energy} energy)"
 
 
-Move = Union[FastMove, ChargedMove]
+type Move = FastMove | ChargedMove
 
 
 class Moveset(BaseModel):
@@ -102,7 +103,7 @@ def get_type_effectiveness(attack: PokemonType, defense: PokemonType) -> Effecti
     return Effectiveness.default
 
 
-def get_move_effectiveness(attack: PokemonType, defender: set[PokemonType]) -> float:
+def get_move_effectiveness(attack: PokemonType, defender: Iterable[PokemonType]) -> float:
     """
     Get the effectiveness of an attack type on a defender (which can have two types).
     e.g,. Electric is triple-resisted by Ground/Dragon.

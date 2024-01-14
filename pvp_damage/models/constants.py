@@ -326,9 +326,7 @@ TYPE_MATCHUPS: dict[PokemonType, OneTypeMatchups] = {
 
 
 def _load_gamemaster() -> Any:
-    with open(Path("data/gamemaster.json")) as f:
-        gamemaster = json.load(f)
-
+    gamemaster = json.loads(Path("data/gamemaster.json").read_text())
     return gamemaster
 
 

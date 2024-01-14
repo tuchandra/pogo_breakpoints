@@ -15,6 +15,7 @@ requests = "^2.25.1"
 ruff = "^0.1.13"
 ipython = "^8.20.0"
 pytest = "^7.4.4"
+pyright = "^1.1.345"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -24,6 +25,7 @@ build-backend = "poetry.core.masonry.api"
 line-length = 120
 target-version = "py312"
 preview = true
+unsafe-fixes = true
 
 ignore = [
   "E501", # line length
@@ -43,3 +45,8 @@ select = [
   "TID252", # tidy imports
   "UP",     # pyupgrade
 ]
+
+[tool.pyright]
+typeCheckingMode = "strict"
+pythonVersion = "3.12"
+executionEnvironments = [{ root = "." }]
