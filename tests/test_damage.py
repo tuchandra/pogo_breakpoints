@@ -16,10 +16,10 @@ from pvp_damage.models.pokemon import Pokemon, PokemonSpecies, get_species
 
 @pytest.fixture()
 def mock_moves() -> dict[str, Move]:
-    _fast_move_type = TypedDict("_fast_move_type", {"move_id": str, "power": int, "energy": int, "turns": int})
+    _fast_move_type = TypedDict("_fast_move_type", {"move_id": str, "power": int, "energy": int, "turns": int})  # noqa: UP013
     default_fast: _fast_move_type = {"move_id": "any", "power": 4, "energy": 4, "turns": 4}
 
-    _charged_move_type = TypedDict("_charged_move_type", {"move_id": str, "power": int, "energy": int})
+    _charged_move_type = TypedDict("_charged_move_type", {"move_id": str, "power": int, "energy": int})  # noqa: UP013
     default_charged: _charged_move_type = {"move_id": "any", "power": 4, "energy": 4}
 
     return {
