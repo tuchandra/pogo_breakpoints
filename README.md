@@ -1,5 +1,4 @@
 # Pokemon GO PVP breakpoint calculator
-
 This is a program for *efficiently* computing breakpoints and bulkpoints in Pokemon GO PVP.
 
 **What are breakpoints/bulkpoints?** ...
@@ -28,8 +27,6 @@ PVPoke isn't really built to let us ask questions like:
  - What IVs should my Altaria have to do extra Dragonbreath damage against the GL meta?
 
 **Being able to compute these efficiently is the goal of this project.**
-
-
 
 **How much does this matter?
 I'll also say that these aren't _really_ that important overall.
