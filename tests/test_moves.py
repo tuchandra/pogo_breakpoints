@@ -14,7 +14,7 @@ from pvp_damage.models.moves import (
 @pytest.mark.parametrize(
     ("name", "energy", "power", "turns"),
     [
-        ("Incinerate", 20, 15, 5),
+        ("Incinerate", 20, 20, 5),
         ("Vine Whip", 8, 5, 2),
         ("Volt Switch", 16, 12, 4),
         ("Water Gun", 3, 3, 1),
@@ -63,7 +63,7 @@ def test_get_charged_move(name: str, energy: int, power: int):
 @pytest.mark.parametrize(
     ("move_id", "energy", "power", "turns"),
     [
-        ("INCINERATE", 20, 15, 5),
+        ("INCINERATE", 20, 20, 5),
         ("VINE_WHIP", 8, 5, 2),
         ("VOLT_SWITCH", 16, 12, 4),
         ("WATER_GUN", 3, 3, 1),
