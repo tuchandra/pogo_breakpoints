@@ -132,6 +132,8 @@ def _load_moves_from_gamemaster(gamemaster: Any) -> tuple[list[FastMove], list[C
         if (move["energyGain"] or move["moveId"] == "TRANSFORM")
     ]
     fast_moves.append(
+        # Some GM entires have Struggle as a placeholder for Pokemon without fast move data.
+        # Struggle is actually a charged move, which is inconvenient ... so toss a placeholder here.
         FastMove(
             move_id="STRUGGLE",
             name="Struggle",

@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import httpx
 
@@ -26,5 +26,16 @@ def get_gamemaster() -> dict[str, Any]:
     return base
 
 
+def get_leagues(league: Literal["great", "ultra", "master"]) -> dict[str, Any]:
+    """Fetch data for Great / Ultra / Master league."""
+
+    github = "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/groups/"
+
+    return httpx.get(github + f"{league}.json").raise_for_status().json()
+
+
 if __name__ == "__main__":
     Path("data/gamemaster.json").write_text(json.dumps(get_gamemaster(), indent=2))
+
+    for league in ("great", "ultra", "master"):
+        Path(f"data/{league}.json").write_text(json.dumps(get_leagues(league), indent=2))

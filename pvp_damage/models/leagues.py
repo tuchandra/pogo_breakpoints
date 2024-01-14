@@ -20,6 +20,9 @@ def _get_meta_from_file(name: str) -> list[tuple[PokemonSpecies, Moveset]]:
     meta_list: list[tuple[PokemonSpecies, Moveset]] = []
     for item in data:
         species = get_species_by_id(item["speciesId"])
+        if item.get("shadowType") == "shadow":
+            species = PokemonSpecies(**(dict(species) | {"is_shadow": True}))
+
         fast = get_fast_move_by_id(item["fastMove"])
         charged = [get_charged_move_by_id(move) for move in item["chargedMoves"]]
         meta_list.append((species, Moveset(fast=fast, charged=charged)))  # pyright: ignore[reportGeneralTypeIssues]

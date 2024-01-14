@@ -15,19 +15,23 @@ from pvp_damage.models.pokemon import get_species
         ("Venusaur", False, True),
         ("Jellicent", False, True),
         ("Registeel", False, True),
-        ("Wigglytuff", False, True),
-        ("Hypno", False, True),
-        ("Mew", False, True),
-        ("Galvantula", False, True),
+        ("Charjabug", False, True),
+        ("Carbink", False, True),
         # shadows not in meta
         ("Azumarill", True, False),
         ("Bastiodon", True, False),
         ("Talonflame", True, False),
         # shadow in meta
-        ("Hypno", True, True),
         ("Victreebel", True, True),
-        ("Machamp", True, True),
-        ("Nidoqueen", True, True),
+        ("Gligar", True, True),
+        ("Swampert", True, True),
+        # fell from meta between 2021 and now
+        ("Nidoqueen", True, False),
+        ("Wigglytuff", False, False),
+        ("Hypno", False, False),
+        ("Hypno", True, False),
+        ("Galvantula", False, False),
+        ("Mew", False, False),
     ],
 )
 def test_great_league(name: str, shadow: bool, expected_present: bool):
@@ -44,23 +48,25 @@ def test_great_league(name: str, shadow: bool, expected_present: bool):
         ("Azumarill", False, False),
         ("Bastiodon", False, False),
         ("Wigglytuff", False, False),
+        ("Stunfisk (Galarian)", False, False),
         # regular pokemon
         ("Talonflame", False, True),
         ("Venusaur", False, True),
         ("Registeel", False, True),
-        ("Melmetal", False, True),
+        ("Cobalion", False, True),
         ("Giratina (Altered)", False, True),
-        # these pokemon mostly in premier
-        ("Jellicent", False, False),
-        ("Stunfisk (Galarian)", False, False),
+        ("Jellicent", False, True),
         # these shadows aren't there
         ("Registeel", True, False),
         ("Venusaur", True, False),
         ("Cradily", True, False),
-        ("Swampert", True, False),
         # these shadows are
-        ("Machamp", True, True),
-        ("Abomasnow", True, True),
+        ("Swampert", True, True),
+        ("Dragonite", True, True),
+        # fell from meta between 2021 and now
+        ("Abomasnow", True, False),
+        ("Abomasnow", False, False),
+        ("Melmetal", False, False),
     ],
 )
 def test_ultra_league(name: str, shadow: bool, expected_present: bool):
