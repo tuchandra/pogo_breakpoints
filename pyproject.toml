@@ -9,6 +9,7 @@ license = "MIT"
 python = "^3.12"
 pydantic = "^2.5.3"
 requests = "^2.25.1"
+httpx = "^0.26.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.13"

@@ -131,6 +131,16 @@ def _load_moves_from_gamemaster(gamemaster: Any) -> tuple[list[FastMove], list[C
         for move in all_moves
         if (move["energyGain"] or move["moveId"] == "TRANSFORM")
     ]
+    fast_moves.append(
+        FastMove(
+            move_id="STRUGGLE",
+            name="Struggle",
+            type=PokemonType("normal"),
+            power=0,
+            energy=0,
+            turns=1,
+        )
+    )
     charged_moves = [
         ChargedMove(
             move_id=move["moveId"],
