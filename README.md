@@ -34,3 +34,10 @@ Breakpoints matter a LOT in Master League, where having perfect IVs is practical
 But in the other leagues they're far less relevant.
 Nonetheless, for one-turn fast moves (like Dragonbreath they can make a big difference, and on
 Community Day it can be useful to know which IV spreads to look for.
+
+## Development
+This project uses Python 3.12 and manages dependencies with Poetry.
+
+- Install dependencies: `poetry install`
+- Run tests: `(poetry run) pytest`
+- Update the gamemaster file: `(poetry run) python scripts/fetch_data.py`

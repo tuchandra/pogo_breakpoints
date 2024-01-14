@@ -8,9 +8,13 @@ import httpx
 def get_gamemaster() -> dict[str, Any]:
     """
     Fetches the gamemaster from PVPoke's Github and returns it as a dict.
+
     Start with base.json, then merge in pokemon.json and moves.json; those are stored
     separately upstream (probably for clearer diffs?), but it's easier for us to keep
     it all together.
+
+    Run this script to update gamemaster.json when new Pokemon are released, moves are
+    updated, or the season shifts.
     """
 
     github = "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster/"
