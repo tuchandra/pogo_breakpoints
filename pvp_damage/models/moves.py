@@ -1,7 +1,7 @@
 from collections.abc import Iterable
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from .constants import GAMEMASTER, TYPE_MATCHUPS, Effectiveness, PokemonType
 
@@ -13,9 +13,7 @@ class FastMove(BaseModel):
     power: int = Field(ge=0, le=20)
     energy: int = Field(ge=0, le=20)
     turns: int = Field(ge=1, le=5)
-
-    class Config:
-        frozen = True
+    model_config = ConfigDict(frozen=True)
 
     def __repr__(self) -> str:
         return f"{self.name} ({self.type.value}; {self.power} power, {self.energy} energy, {self.turns} turns)"
@@ -27,10 +25,7 @@ class ChargedMove(BaseModel):
     type: PokemonType
     power: int
     energy: int
-    # buffs / debuffs?
-
-    class Config:
-        frozen = True
+    model_config = ConfigDict(frozen=True)
 
     def __repr__(self) -> str:
         return f"{self.name} ({self.type.value}; {self.power} power, {self.energy} energy)"

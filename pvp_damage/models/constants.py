@@ -9,8 +9,8 @@ STAB_BONUS = 1.2
 SHADOW_ATTACK_MULT = 1.2
 SHADOW_DEF_MULT = 5 / 6
 
-IVs = tuple[int, int, int]
-Stats = tuple[float, float, float]
+type IVs = tuple[int, int, int]
+type Stats = tuple[float, float, float]
 
 
 class Effectiveness(Enum):
