@@ -103,8 +103,8 @@ def get_species(species_name: str, as_shadow: bool = False) -> PokemonSpecies:
     return maybe_mon
 
 
-def get_species_by_id(species_id: str) -> PokemonSpecies:
-    is_shadow = "_shadow" in species_id
+def get_species_by_id(species_id: str, as_shadow: bool = False) -> PokemonSpecies:
+    is_shadow = ("_shadow" in species_id) or as_shadow
     species_id = species_id.replace("_shadow", "")
 
     if not (maybe_mon := _POKEMON_ID_LOOKUP.get(species_id)):
