@@ -24,7 +24,7 @@ def _get_meta_from_file(name: str) -> list[tuple[PokemonSpecies, Moveset]]:
 
         fast = get_fast_move_by_id(item["fastMove"])
         charged = [get_charged_move_by_id(move) for move in item["chargedMoves"]]
-        meta_list.append((species, Moveset(fast=fast, charged=charged)))  # pyright: ignore[reportGeneralTypeIssues]
+        meta_list.append((species, Moveset(fast=fast, charged=charged)))  # pyright: ignore[reportArgumentType]
 
     return meta_list
 

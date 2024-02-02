@@ -36,7 +36,7 @@ type Move = FastMove | ChargedMove
 
 class Moveset(BaseModel):
     fast: FastMove
-    charged: tuple[ChargedMove, ChargedMove | None]
+    charged: tuple[ChargedMove] | tuple[ChargedMove, ChargedMove]
 
 
 def get_fast_move(move_name: str) -> FastMove:
