@@ -43,8 +43,12 @@ select = [
   "PTH",    # flake8-use-pathlib
   "SIM",    # flake8-simplify
   "TID252", # tidy imports
+  "FURB",   # refurb
   "UP",     # pyupgrade
 ]
+
+[tool.ruff.format]
+preview = true
 
 [tool.pyright]
 typeCheckingMode = "strict"

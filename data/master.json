@@ -48,14 +48,6 @@
     ]
   },
   {
-    "speciesId": "rhyperior",
-    "fastMove": "MUD_SLAP",
-    "chargedMoves": [
-      "BREAKING_SWIPE",
-      "ROCK_WRECKER"
-    ]
-  },
-  {
     "speciesId": "giratina_altered",
     "fastMove": "SHADOW_CLAW",
     "chargedMoves": [
@@ -112,18 +104,10 @@
     ]
   },
   {
-    "speciesId": "landorus_incarnate",
-    "fastMove": "MUD_SHOT",
-    "chargedMoves": [
-      "EARTH_POWER",
-      "ROCK_SLIDE"
-    ]
-  },
-  {
     "speciesId": "landorus_therian",
     "fastMove": "MUD_SHOT",
     "chargedMoves": [
-      "SUPER_POWER",
+      "SANDSEAR_STORM",
       "STONE_EDGE"
     ]
   },
@@ -184,11 +168,27 @@
     ]
   },
   {
+    "speciesId": "rayquaza",
+    "fastMove": "DRAGON_TAIL",
+    "chargedMoves": [
+      "BREAKING_SWIPE",
+      "HURRICANE"
+    ]
+  },
+  {
     "speciesId": "reshiram",
     "fastMove": "DRAGON_BREATH",
     "chargedMoves": [
       "FUSION_FLARE",
       "DRACO_METEOR"
+    ]
+  },
+  {
+    "speciesId": "rhyperior",
+    "fastMove": "MUD_SLAP",
+    "chargedMoves": [
+      "BREAKING_SWIPE",
+      "ROCK_WRECKER"
     ]
   },
   {
@@ -221,6 +221,14 @@
     "chargedMoves": [
       "ANCIENT_POWER",
       "AURA_SPHERE"
+    ]
+  },
+  {
+    "speciesId": "ursaluna",
+    "fastMove": "TACKLE",
+    "chargedMoves": [
+      "ICE_PUNCH",
+      "HIGH_HORSEPOWER"
     ]
   },
   {
@@ -272,19 +280,19 @@
     ]
   },
   {
-    "speciesId": "ursaluna",
-    "fastMove": "TACKLE",
+    "speciesId": "zygarde_complete",
+    "fastMove": "DRAGON_TAIL",
     "chargedMoves": [
-      "ICE_PUNCH",
-      "HIGH_HORSEPOWER"
+      "CRUNCH",
+      "EARTHQUAKE"
     ]
   },
   {
-    "speciesId": "rayquaza",
-    "fastMove": "DRAGON_TAIL",
+    "speciesId": "solgaleo",
+    "fastMove": "FIRE_SPIN",
     "chargedMoves": [
-      "BREAKING_SWIPE",
-      "HURRICANE"
+      "PSYCHIC_FANGS",
+      "IRON_HEAD"
     ]
   }
 ]

@@ -1,5 +1,13 @@
 [
   {
+    "speciesId": "ampharos",
+    "fastMove": "VOLT_SWITCH",
+    "chargedMoves": [
+      "BRUTAL_SWING",
+      "TRAILBLAZE"
+    ]
+  },
+  {
     "speciesId": "charizard",
     "fastMove": "WING_ATTACK",
     "chargedMoves": [
@@ -30,6 +38,15 @@
       "PSYCHO_BOOST",
       "ROCK_SLIDE"
     ]
+  },
+  {
+    "speciesId": "dragonite_shadow",
+    "fastMove": "DRAGON_BREATH",
+    "chargedMoves": [
+      "DRAGON_CLAW",
+      "SUPER_POWER"
+    ],
+    "shadowType": "shadow"
   },
   {
     "speciesId": "giratina_altered",
@@ -185,6 +202,14 @@
     ]
   },
   {
+    "speciesId": "skeledirge",
+    "fastMove": "INCINERATE",
+    "chargedMoves": [
+      "SHADOW_BALL",
+      "DISARMING_VOICE"
+    ]
+  },
+  {
     "speciesId": "steelix",
     "fastMove": "DRAGON_TAIL",
     "chargedMoves": [
@@ -210,11 +235,11 @@
     ]
   },
   {
-    "speciesId": "skeledirge",
+    "speciesId": "talonflame",
     "fastMove": "INCINERATE",
     "chargedMoves": [
-      "SHADOW_BALL",
-      "DISARMING_VOICE"
+      "FLY",
+      "FLAME_CHARGE"
     ]
   },
   {
@@ -223,6 +248,14 @@
     "chargedMoves": [
       "SURF",
       "MOONBLAST"
+    ]
+  },
+  {
+    "speciesId": "tentacruel",
+    "fastMove": "POISON_JAB",
+    "chargedMoves": [
+      "SCALD",
+      "BLIZZARD"
     ]
   },
   {
@@ -274,36 +307,11 @@
     ]
   },
   {
-    "speciesId": "talonflame",
-    "fastMove": "INCINERATE",
+    "speciesId": "annihilape",
+    "fastMove": "COUNTER",
     "chargedMoves": [
-      "FLY",
-      "FLAME_CHARGE"
-    ]
-  },
-  {
-    "speciesId": "ampharos",
-    "fastMove": "VOLT_SWITCH",
-    "chargedMoves": [
-      "BRUTAL_SWING",
-      "TRAILBLAZE"
-    ]
-  },
-  {
-    "speciesId": "dragonite_shadow",
-    "fastMove": "DRAGON_BREATH",
-    "chargedMoves": [
-      "DRAGON_CLAW",
-      "SUPER_POWER"
-    ],
-    "shadowType": "shadow"
-  },
-  {
-    "speciesId": "tentacruel",
-    "fastMove": "POISON_JAB",
-    "chargedMoves": [
-      "SCALD",
-      "BLIZZARD"
+      "ICE_PUNCH",
+      "SHADOW_BALL"
     ]
   }
 ]
