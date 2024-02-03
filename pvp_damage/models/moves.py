@@ -18,6 +18,9 @@ class FastMove(BaseModel):
     def __repr__(self) -> str:
         return f"{self.name} ({self.type.value}; {self.power} power, {self.energy} energy, {self.turns} turns)"
 
+    def __str__(self) -> str:
+        return self.name
+
 
 class ChargedMove(BaseModel):
     move_id: str
@@ -30,6 +33,9 @@ class ChargedMove(BaseModel):
     def __repr__(self) -> str:
         return f"{self.name} ({self.type.value}; {self.power} power, {self.energy} energy)"
 
+    def __str__(self) -> str:
+        return self.name
+
 
 type Move = FastMove | ChargedMove
 
@@ -37,6 +43,9 @@ type Move = FastMove | ChargedMove
 class Moveset(BaseModel):
     fast: FastMove
     charged: tuple[ChargedMove] | tuple[ChargedMove, ChargedMove]
+
+    def __str__(self) -> str:
+        return f"{self.fast} / {', '.join(x.name for x in self.charged)}"
 
 
 def get_fast_move(move_name: str) -> FastMove:

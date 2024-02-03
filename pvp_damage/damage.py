@@ -1,5 +1,8 @@
+from collections.abc import Mapping
 import itertools
 from math import floor, sqrt
+
+from pydantic import BaseModel
 
 from pvp_damage.models.constants import (
     CP_MULTIPLIERS,
@@ -11,6 +14,16 @@ from pvp_damage.models.constants import (
 )
 from pvp_damage.models.moves import Move, get_move_effectiveness
 from pvp_damage.models.pokemon import Pokemon, PokemonSpecies
+
+
+class DamageRanges(BaseModel):
+    min_damage: int
+    max_damage: int
+
+    ranges: Mapping[int, tuple[Pokemon, Pokemon]]
+
+    rank1: Pokemon
+    damage_rank1: int
 
 
 def is_stab(move: Move, pokemon: PokemonSpecies) -> bool:
@@ -100,32 +113,57 @@ def compute_attacker_damage(
     defender: PokemonSpecies,
     move: Move,
     cp_limit: int,
-) -> None:
+) -> DamageRanges:
     """
     Compute the damage that a given attacker does to all possible defenders of a
     given species. This assumes that all the defenders are powered up to the max
     level possible (including best buddy / level 51 where applicable).
     """
 
-    all_defenders = compute_iv_possibilities(defender, cp_limit)
-    all_defenders = sorted(all_defenders.values(), key=lambda mon: mon.defense_stat)
-    min_defense_mon = all_defenders[0]
-    max_defense_mon = all_defenders[-1]
+    iv_table = compute_iv_possibilities(defender, cp_limit)
+    defenders = sorted(iv_table.values(), key=lambda mon: mon.defense_stat)
+
+    lowest_defense, *_, highest_defense = defenders
+    highest_stat_product = sorted(defenders, key=lambda mon: mon.stat_product)[-1]
 
     # first, check if the min and max damage are different at all
-    min_damage = calculate_damage(move, attacker, max_defense_mon)
-    max_damage = calculate_damage(move, attacker, min_defense_mon)
+    min_damage = calculate_damage(move, attacker, highest_defense)
+    max_damage = calculate_damage(move, attacker, lowest_defense)
     if min_damage == max_damage:
-        return
+        return DamageRanges(
+            min_damage=min_damage,
+            max_damage=max_damage,
+            ranges={min_damage: (lowest_defense, highest_defense)},
+            rank1=highest_stat_product,
+            damage_rank1=min_damage,
+        )
 
-    # otherwise, find the bulkpoints and just compute the damage
-    damage_vs_all = {defender: calculate_damage(move, attacker, defender) for defender in all_defenders}
+    # otherwise, brute force the bulkpoints by computing the damage
+    damage_rank1 = calculate_damage(move, attacker, highest_stat_product)
+    damage_vs_all = {defender: calculate_damage(move, attacker, defender) for defender in defenders}
     damage_partition: dict[int, set[Pokemon]] = {damage: set() for damage in range(min_damage, max_damage + 1)}
     for mon, damage in damage_vs_all.items():
         damage_partition[damage].add(mon)
 
-    print(damage_partition)
+    print(f"{attacker.species.full_name} using {move}; CP {attacker.cp} (level {attacker.level}, {attacker.ivs})")
+    print(
+        f"vs. {defender.full_name} ({round(lowest_defense.defense_stat, 2)} - {round(highest_defense.defense_stat, 2)} defense; rank 1 {round(highest_stat_product.defense_stat, 2)})"
+    )
 
-    # find the point where damage changes
+    ranges: dict[int, tuple[Pokemon, Pokemon]] = {}
+    for damage in range(min_damage, max_damage + 1):
+        lowest, *_, highest = sorted(damage_partition[damage], key=lambda mon: mon.defense_stat)
+        ranges[damage] = (lowest, highest)
 
-    ...
+        percent = len(damage_partition[damage]) / len(iv_table) * 100
+        print(
+            f"- {damage}: {percent:.2f}% of IVs; def: {round(lowest.defense_stat, 2)} - {round(highest.defense_stat, 2)}"
+        )
+
+    return DamageRanges(
+        min_damage=min_damage,
+        max_damage=max_damage,
+        ranges=ranges,
+        rank1=highest_stat_product,
+        damage_rank1=damage_rank1,
+    )

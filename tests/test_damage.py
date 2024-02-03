@@ -339,6 +339,9 @@ def test_find_max_level_ultra(species_name: str, ivs: IVs, level: float, cp: int
         ("Pelipper", (10, 12, 9), 26, 1499),
         ("Roserade", (4, 15, 14), 18.5, 1499),
         ("Cradily", (0, 15, 8), 26.5, 1498),
+        ("Swampert", (0, 14, 14), 19, 1498),
+        ("Swampert", (0, 15, 13), 19, 1499),
+        ("Chansey", (15, 15, 15), 51, 1435),
     ],
 )
 def test_find_max_level_great(species_name: str, ivs: IVs, level: float, cp: int):
@@ -355,8 +358,9 @@ def test_find_max_level_great(species_name: str, ivs: IVs, level: float, cp: int
     assert mon.cp == cp
 
     # test that this is _maximal_ CP (that the next level exceeds the limit)
-    half_level_higher = Pokemon(species=species, level=level + 0.5, ivs=(15, 15, 15))
-    assert half_level_higher.cp > cp_limit
+    if level < 50:
+        half_level_higher = Pokemon(species=species, level=level + 0.5, ivs=(15, 15, 15))
+        assert half_level_higher.cp > cp_limit
 
 
 def test_compute_iv_possibilities_azu():
@@ -432,11 +436,46 @@ def test_compute_iv_possibilities_alt():
             assert half_level_higher.cp > 1500
 
 
-def test_compute_attacker_damage():
-    """Not really sure how to test this ..."""
-
+def test_compute_attacker_damage_ultra():
     serp = get_species("Serperior")
-    my_serp = Pokemon(species=serp, level=50, ivs=(15, 15, 15))
+    my_serp = Pokemon(species=serp, level=51, ivs=(8, 15, 15))
 
     swamp = get_species("Swampert")
-    compute_attacker_damage(my_serp, swamp, get_move_by_name("Vine Whip"), 2500)
+    ranges = compute_attacker_damage(my_serp, swamp, get_move_by_name("Vine Whip"), 2500)
+
+    assert ranges.min_damage == 10
+    assert ranges.max_damage == 12
+    assert ranges.rank1.ivs == (0, 14, 13)
+    assert ranges.damage_rank1 == 11
+
+    lowest, highest = ranges.ranges[10]
+    assert round(lowest.defense_stat, 2) == 142.82
+    assert round(highest.defense_stat, 2) == 144.7
+
+    lowest, highest = ranges.ranges[11]
+    assert round(lowest.defense_stat, 2) == 129.85
+    assert round(highest.defense_stat, 2) == 142.62
+
+    lowest, highest = ranges.ranges[12]
+    assert round(lowest.defense_stat, 2) == 129.11
+    assert round(highest.defense_stat, 2) == 129.64
+
+
+def test_compute_attacker_damage_drapion():
+    drapion = get_species("Drapion", as_shadow=True)
+    my_drapion = find_max_level_for_league(drapion, (2, 14, 14), 1500)
+    swampert = get_species("Swampert")
+
+    ranges = compute_attacker_damage(my_drapion, swampert, get_move_by_name("Bite"), 1500)
+    assert ranges.min_damage == 4
+    assert ranges.max_damage == 5
+    assert ranges.rank1.ivs == (0, 14, 14)
+    assert ranges.damage_rank1 == 4
+
+    lowest, highest = ranges.ranges[4]
+    assert round(lowest.defense_stat, 2) == 109.17
+    assert round(highest.defense_stat, 2) == 112.08
+
+    lowest, highest = ranges.ranges[5]
+    assert round(lowest.defense_stat, 2) == 99.18
+    assert round(highest.defense_stat, 2) == 109.13

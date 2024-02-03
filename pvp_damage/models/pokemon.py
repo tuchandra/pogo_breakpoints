@@ -32,6 +32,12 @@ class PokemonSpecies(BaseModel):
             return all(getattr(self, x) == getattr(other, x) for x in self.model_fields)
         return super().__eq__(other)
 
+    @property
+    def full_name(self) -> str:
+        if self.is_shadow:
+            return f"{self.name} (Shadow)"
+        return self.name
+
     def cp(self, level: float, att_iv: int, def_iv: int, sta_iv: int):  # unused
         attack, defense, stamina = (
             self.attack + att_iv,
