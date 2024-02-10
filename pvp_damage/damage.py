@@ -1,5 +1,5 @@
-from collections.abc import Mapping
 import itertools
+from collections.abc import Mapping
 from math import floor, sqrt
 
 from pydantic import BaseModel

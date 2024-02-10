@@ -1,9 +1,17 @@
 from math import floor
 
 import pytest
+from dirty_equals import HasAttributes
 
 from pvp_damage.models.constants import IVs, PokemonType, Stats
 from pvp_damage.models.pokemon import Pokemon, get_species, get_species_by_id
+
+
+def test_equals():
+    assert get_species_by_id("stunfisk_galarian") == HasAttributes({
+        "name": "Stunfisk (Galarian)",
+        "id": "stunfisk_galarian",
+    })
 
 
 @pytest.mark.parametrize(

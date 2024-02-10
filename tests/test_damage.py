@@ -479,3 +479,18 @@ def test_compute_attacker_damage_drapion():
     lowest, highest = ranges.ranges[5]
     assert round(lowest.defense_stat, 2) == 99.18
     assert round(highest.defense_stat, 2) == 109.13
+
+
+def test_compute_attacker_damage_registeel():
+    registeel = get_species("Registeel", as_shadow=True)
+    my_registeel = find_max_level_for_league(registeel, (10, 15, 15), 1500)
+    doublade = get_species("Doublade")
+
+    ranges = compute_attacker_damage(my_registeel, doublade, get_move_by_name("Lock On"), 1500)
+    assert ranges.min_damage == 1
+    assert ranges.max_damage == 1
+    assert ranges.damage_rank1 == 1
+
+    lowest, highest = ranges.ranges[1]
+    assert round(lowest.defense_stat, 2) == 129.07
+    assert round(highest.defense_stat, 2) == 144.63
