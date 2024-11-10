@@ -14,6 +14,7 @@ from pvp_damage.models.constants import (
 )
 from pvp_damage.models.moves import Move, get_move_effectiveness
 from pvp_damage.models.pokemon import Pokemon, PokemonSpecies
+from pvp_damage.utils import groupby, sort_attack
 
 
 class DamageRanges(BaseModel):
@@ -22,8 +23,8 @@ class DamageRanges(BaseModel):
 
     ranges: Mapping[int, tuple[Pokemon, Pokemon]]
 
-    rank1: Pokemon
-    damage_rank1: int
+    rank1: Pokemon | None = None
+    damage_rank1: int | None = None
 
 
 def is_stab(move: Move, pokemon: PokemonSpecies) -> bool:
@@ -108,7 +109,7 @@ def compute_iv_possibilities(species: PokemonSpecies, cp_limit: int) -> dict[IVs
     return out
 
 
-def compute_attacker_damage(
+def compute_bulkpoints(
     attacker: Pokemon,
     defender: PokemonSpecies,
     move: Move,
@@ -166,4 +167,66 @@ def compute_attacker_damage(
         ranges=ranges,
         rank1=highest_stat_product,
         damage_rank1=damage_rank1,
+    )
+
+
+def compute_breakpoints(
+    attacker_species: PokemonSpecies,
+    defender: Pokemon,
+    move: Move,
+    cp_limit: int,
+) -> DamageRanges:
+    """
+    Compute the damage that all possible attackers will do to a given defender.
+    This assumes all attackers are powered up to the max level possible (including
+    best buddy / level 51), but maybe we can turn this off later.
+
+    Use case: finding which attackers will do at least X damage to e.g., the rank 1
+    Clodsire.
+    """
+
+    iv_table = compute_iv_possibilities(attacker_species, cp_limit)
+    attackers = sort_attack(iv_table.values())
+
+    lowest_attack, *_, highest_attack = attackers
+
+    # first, check if the min and max damage are different at all
+    min_damage = calculate_damage(move, lowest_attack, defender)
+    max_damage = calculate_damage(move, highest_attack, defender)
+    if min_damage == max_damage:
+        print(f"- {min_damage} damage guaranteed (no breakpoints)")
+        return DamageRanges(
+            min_damage=min_damage,
+            max_damage=max_damage,
+            ranges={min_damage: (lowest_attack, highest_attack)},
+        )
+
+    # sort by attack, then partition damage vs. the defender
+    damage_partition: dict[int, set[Pokemon]] = {damage: set() for damage in range(min_damage, max_damage + 1)}
+    by_attack = groupby(attackers, lambda mon: mon.attack_stat)
+    for _stat, attackers_with_this_stat in by_attack.items():
+        attacker = attackers_with_this_stat[0]
+        damage = calculate_damage(move, attacker, defender)
+        damage_partition[damage].update(attackers_with_this_stat)
+
+        # For debugging - print every distinct attack value.
+        # print(f"Attack {stat:.3f} (level {attacker.level:.1f} & {attacker.attack_iv:2d} IV) | {damage} damage")
+
+    print(
+        f"{attacker_species.full_name} ({lowest_attack.attack_stat:.3f} - {highest_attack.attack_stat:.3f}) using {move}"
+    )
+    print(f"vs. {defender.species.full_name} ({defender.ivs}, level {defender.level})")
+
+    ranges: dict[int, tuple[Pokemon, Pokemon]] = {}
+    for damage, mons in sorted(damage_partition.items(), key=lambda x: x[0]):
+        lowest, *_, highest = sorted(mons, key=lambda mon: mon.attack_stat)
+        ranges[damage] = (lowest, highest)
+
+        percent = len(mons) / len(iv_table) * 100
+        print(f"- {damage}: {percent:.2f}% of IVs; atk: {lowest.attack_stat:.3f} - {highest.attack_stat:.3f}")
+
+    return DamageRanges(
+        min_damage=min_damage,
+        max_damage=max_damage,
+        ranges=ranges,
     )

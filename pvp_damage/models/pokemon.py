@@ -79,7 +79,7 @@ class Pokemon(BaseModel):
 
     @property
     def stamina_stat(self) -> float:
-        return (self.species.stamina + self.stamina_iv) * self.cpm
+        return floor((self.species.stamina + self.stamina_iv) * self.cpm)
 
     @property
     def stats(self) -> Stats:

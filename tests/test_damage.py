@@ -4,7 +4,7 @@ import pytest
 
 from pvp_damage.damage import (
     calculate_damage,
-    compute_attacker_damage,
+    compute_bulkpoints,
     compute_iv_possibilities,
     find_max_level_for_league,
     is_stab,
@@ -441,7 +441,7 @@ def test_compute_attacker_damage_ultra():
     my_serp = Pokemon(species=serp, level=51, ivs=(8, 15, 15))
 
     swamp = get_species("Swampert")
-    ranges = compute_attacker_damage(my_serp, swamp, get_move_by_name("Vine Whip"), 2500)
+    ranges = compute_bulkpoints(my_serp, swamp, get_move_by_name("Vine Whip"), 2500)
 
     assert ranges.min_damage == 10
     assert ranges.max_damage == 12
@@ -466,7 +466,7 @@ def test_compute_attacker_damage_drapion():
     my_drapion = find_max_level_for_league(drapion, (2, 14, 14), 1500)
     swampert = get_species("Swampert")
 
-    ranges = compute_attacker_damage(my_drapion, swampert, get_move_by_name("Bite"), 1500)
+    ranges = compute_bulkpoints(my_drapion, swampert, get_move_by_name("Bite"), 1500)
     assert ranges.min_damage == 4
     assert ranges.max_damage == 5
     assert ranges.rank1.ivs == (0, 14, 14)
@@ -486,7 +486,7 @@ def test_compute_attacker_damage_registeel():
     my_registeel = find_max_level_for_league(registeel, (10, 15, 15), 1500)
     doublade = get_species("Doublade")
 
-    ranges = compute_attacker_damage(my_registeel, doublade, get_move_by_name("Lock On"), 1500)
+    ranges = compute_bulkpoints(my_registeel, doublade, get_move_by_name("Lock On"), 1500)
     assert ranges.min_damage == 1
     assert ranges.max_damage == 1
     assert ranges.damage_rank1 == 1
