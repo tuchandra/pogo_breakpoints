@@ -1,7 +1,7 @@
 import json
 from enum import Enum
 from pathlib import Path
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, Field
 
@@ -15,6 +15,29 @@ type IV = Annotated[int, Field(ge=0, le=15)]
 type IVs = tuple[IV, IV, IV]
 
 type Stats = tuple[float, float, float]
+
+type BuffDebuff = Literal[-4, -3, -2, -1, 0, 1, 2, 3, 4]
+
+
+def stat_modifier(modifier: BuffDebuff) -> float:
+    """
+    Compute the effect of a buff or debuff; this returns the multiplier to use in the
+    damage formula.
+
+    For buffs, each buff adds 25% to the stat (5/4, 6/4, 7/4, 8/4) - which means the
+    max buff doubles your stat.
+
+    For debuffs, each debuff subtracts 25% from the stat (1/4, 2/4, 3/4, 4/4) - which
+    means the max debuff halves your stat.
+    """
+
+    if modifier < 0:
+        return 1 / (1 + modifier / 4)
+
+    if modifier > 0:
+        return 1 + (modifier / 4)
+
+    return 1
 
 
 class Effectiveness(Enum):
@@ -330,7 +353,8 @@ TYPE_MATCHUPS: dict[PokemonType, OneTypeMatchups] = {
 
 
 def _load_gamemaster() -> Any:
-    gamemaster = json.loads(Path("data/gamemaster.json").read_text())
+    cwd = Path(__file__).parent
+    gamemaster = json.loads((cwd.parent.parent / "data/gamemaster.json").read_text())
     return gamemaster
 
 
