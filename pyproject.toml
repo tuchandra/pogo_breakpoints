@@ -18,6 +18,7 @@ ipython = "^8.21.0"
 pytest = "^8.0.0"
 pyright = "^1.1.349"
 dirty-equals = "^0.7.1.post0"
+ipykernel = "^6.29.5"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
