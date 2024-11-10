@@ -1,4 +1,4 @@
-from collections.abc import Callable, Iterable, Sequence
+from collections.abc import Callable, Iterable
 
 from pvp_damage.models.pokemon import Pokemon
 
@@ -25,6 +25,27 @@ def lowest_defense(pokemons: Iterable[Pokemon]) -> Pokemon:
 
 def lowest_stamina(pokemons: Iterable[Pokemon]) -> Pokemon:
     return min(pokemons, key=lambda mon: mon.stamina_stat)
+
+
+def format_attack_range(pokemons: Iterable[Pokemon]) -> str:
+    lowest = f"{lowest_attack(pokemons).attack_stat:.2f}"
+    highest = f"{highest_attack(pokemons).attack_stat:.2f}"
+
+    return f"{lowest} - {highest} attack"
+
+
+def format_defense_range(pokemons: Iterable[Pokemon]) -> str:
+    lowest = f"{lowest_defense(pokemons).defense_stat:.2f}"
+    highest = f"{highest_defense(pokemons).defense_stat:.2f}"
+
+    return f"{lowest} - {highest} defense"
+
+
+def format_stamina_range(pokemons: Iterable[Pokemon]) -> str:
+    lowest = f"{lowest_stamina(pokemons).stamina_stat:d}"
+    highest = f"{highest_stamina(pokemons).stamina_stat:d}"
+
+    return f"{lowest} - {highest} stamina"
 
 
 def sort_attack(pokemons: Iterable[Pokemon]) -> list[Pokemon]:
