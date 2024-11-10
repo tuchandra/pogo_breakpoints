@@ -15,6 +15,18 @@ def highest_stamina(pokemons: Iterable[Pokemon]) -> Pokemon:
     return max(pokemons, key=lambda mon: mon.stamina_stat)
 
 
+def lowest_attack(pokemons: Iterable[Pokemon]) -> Pokemon:
+    return min(pokemons, key=lambda mon: mon.attack_stat)
+
+
+def lowest_defense(pokemons: Iterable[Pokemon]) -> Pokemon:
+    return min(pokemons, key=lambda mon: mon.defense_stat)
+
+
+def lowest_stamina(pokemons: Iterable[Pokemon]) -> Pokemon:
+    return min(pokemons, key=lambda mon: mon.stamina_stat)
+
+
 def sort_attack(pokemons: Iterable[Pokemon]) -> list[Pokemon]:
     return sorted(pokemons, key=lambda mon: mon.attack_stat)
 
