@@ -50,9 +50,14 @@ def compute_vs_defender(name: str, opponent_name: str, move_name: str, attacker_
 # compute_vs_defender("Primeape", "Clodsire", "Karate Chop")
 # compute_vs_defender("Primeape", "Annihilape", "Karate Chop")
 # compute_vs_defender("Primeape", "Feraligatr", "Karate Chop")
+compute_vs_defender("Primeape", "Greninja", "Karate Chop")
+compute_vs_defender("Primeape", "Ariados", "Karate Chop")
 # compute_vs_defender("Primeape", "Serperior", "Karate Chop")
+
+
 # compute_vs_defender("Annihilape", "Serperior", "Counter")
-compute_vs_defender("Serperior", "Annihilape", "Vine Whip")
+# compute_vs_defender("Annihilape", "Ariados", "Counter")
+# compute_vs_defender("Serperior", "Annihilape", "Vine Whip")
 
 # against annihilape?
 # compute_vs_defender("Feraligatr", "Annihilape", claw)
@@ -91,6 +96,9 @@ def compute_mirror():
     dmg.compute_breakpoints(ape, highest_defense(clod_killers), counter, 1500)
 
 
+# compute_mirror()
+
+
 def compute_serperior_bulkpoints():
     ape = pkm.get_species("Annihilape")
     clod = pkm.get_species("Clodsire")
@@ -121,4 +129,4 @@ def compute_serperior_bulkpoints():
     dmg.compute_bulkpoints(slight_attack_serp, ape, vine_whip, 1500)
 
 
-compute_serperior_bulkpoints()
+# compute_serperior_bulkpoints()
