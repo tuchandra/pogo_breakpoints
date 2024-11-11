@@ -5,9 +5,7 @@ from pvp_damage.models.moves import get_move_by_name
 from pvp_damage.utils import (
     format_attack_range,
     format_defense_range,
-    highest_attack,
     highest_defense,
-    lowest_attack,
     lowest_defense,
     rank1,
     sort_defense,
@@ -47,11 +45,16 @@ def compute_vs_defender(name: str, opponent_name: str, move_name: str, attacker_
     dmg.compute_breakpoints(attacker, opponent_maxdef, move, 1500, attacker_buff=attacker_buff)
 
 
+# compute_vs_defender("Ariados", "Feraligatr", "Poison Sting")
+# compute_vs_defender("Ariados", "Clodsire", "Poison Sting")
+# compute_vs_defender("Ariados", "Morpeko (Full Belly)", "Poison Sting")
+# compute_vs_defender("Ariados", "Serperior", "Poison Sting")
+
 # compute_vs_defender("Primeape", "Clodsire", "Karate Chop")
 # compute_vs_defender("Primeape", "Annihilape", "Karate Chop")
 # compute_vs_defender("Primeape", "Feraligatr", "Karate Chop")
-compute_vs_defender("Primeape", "Greninja", "Karate Chop")
-compute_vs_defender("Primeape", "Ariados", "Karate Chop")
+# compute_vs_defender("Primeape", "Greninja", "Karate Chop")
+# compute_vs_defender("Primeape", "Ariados", "Karate Chop")
 # compute_vs_defender("Primeape", "Serperior", "Karate Chop")
 
 
