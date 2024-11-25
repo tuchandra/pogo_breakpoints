@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 import pvp_damage.damage as dmg
 from pvp_damage.models import pokemon as pkm
 from pvp_damage.models.constants import BuffDebuff
@@ -12,43 +14,59 @@ from pvp_damage.utils import (
 )
 
 
-def compute_vs_defender(name: str, opponent_name: str, move_name: str, attacker_buff: BuffDebuff = 0):
-    attacker = pkm.get_species(name)
-    opponent = pkm.get_species(opponent_name)
-    opponent_ivs = dmg.compute_iv_possibilities(opponent, 1500).values()
+@dataclass
+class Battler:
+    name: str
+    buff: BuffDebuff = 0
+    shadow: bool = False
 
-    opponent_rank1 = rank1(opponent_ivs)
-    opponent_mindef = lowest_defense(opponent_ivs)
-    opponent_maxdef = highest_defense(opponent_ivs)
+    def __str__(self) -> str:
+        name = f"{self.name} (Shadow)" if self.shadow else self.name
 
-    if attacker_buff > 0:
-        attacker_printed = f"{name} (+{attacker_buff})"
-    elif attacker_buff < 0:
-        attacker_printed = f"{name} (-{attacker_buff})"
-    else:
-        attacker_printed = name
+        if self.buff > 0:
+            return f"{name} (+{self.buff})"
+        if self.buff < 0:
+            return f"{name} (-{self.buff})"
+
+        return name
+
+
+def compute_vs_defender(attacker: Battler, defender: Battler, move_name: str):
+    attacker_species = pkm.get_species(attacker.name, as_shadow=attacker.shadow)
+    defender_species = pkm.get_species(defender.name, as_shadow=defender.shadow)
+    defender_ivs = dmg.compute_iv_possibilities(defender_species, 1500).values()
+
+    defender_rank1 = rank1(defender_ivs)
+    defender_mindef = lowest_defense(defender_ivs)
+    defender_maxdef = highest_defense(defender_ivs)
 
     print()
-    print(f"----- {attacker_printed} vs. {opponent_name} -----")
+    print(f"----- {attacker} using {move_name} vs. {defender} -----")
 
     move = get_move_by_name(move_name)
 
-    print(f"vs. min defense ({opponent_mindef.defense_stat:.2f})")
-    dmg.compute_breakpoints(attacker, opponent_mindef, move, 1500, attacker_buff=attacker_buff)
+    print(f"vs. min defense ({defender_mindef.defense_stat:.2f})")
+    dmg.compute_breakpoints(attacker_species, defender_mindef, move, 1500, attacker_buff=attacker.buff)
 
     print()
-    print(f"vs. rank 1 ({opponent_rank1.defense_stat:.2f})")
-    dmg.compute_breakpoints(attacker, opponent_rank1, move, 1500, attacker_buff=attacker_buff)
+    print(f"vs. rank 1 ({defender_rank1.defense_stat:.2f})")
+    dmg.compute_breakpoints(attacker_species, defender_rank1, move, 1500, attacker_buff=attacker.buff)
 
     print()
-    print(f"vs. max defense ({opponent_maxdef.defense_stat:.2f})")
-    dmg.compute_breakpoints(attacker, opponent_maxdef, move, 1500, attacker_buff=attacker_buff)
+    print(f"vs. max defense ({defender_maxdef.defense_stat:.2f})")
+    dmg.compute_breakpoints(attacker_species, defender_maxdef, move, 1500, attacker_buff=attacker.buff)
 
 
-# compute_vs_defender("Ariados", "Feraligatr", "Poison Sting")
-# compute_vs_defender("Ariados", "Clodsire", "Poison Sting")
-# compute_vs_defender("Ariados", "Morpeko (Full Belly)", "Poison Sting")
-# compute_vs_defender("Ariados", "Serperior", "Poison Sting")
+ariados = Battler("Ariados")
+
+# compute_vs_defender(Battler(name="Primeape"), ariados, "Karate Chop")
+# compute_vs_defender(Battler(name="Toxapex"), ariados, "Poison Jab")
+
+
+# compute_vs_defender(ariados, Battler(name="Guzzlord"), "Poison Sting")
+# compute_vs_defender(ariados, Battler(name="Greninja"), "Poison Sting")
+# compute_vs_defender(ariados, Battler(name="Abomasnow"), "Poison Sting")
+# compute_vs_defender(ariados, Battler(name="Feraligatr", shadow=True), "Poison Sting")
 
 # compute_vs_defender("Primeape", "Clodsire", "Karate Chop")
 # compute_vs_defender("Primeape", "Annihilape", "Karate Chop")
@@ -74,7 +92,69 @@ def compute_vs_defender(name: str, opponent_name: str, move_name: str, attacker_
 # compute_vs_defender("Annihilape", "Annihilape", counter, attacker_buff=+2)
 
 
-def compute_mirror():
+def pex_vs_ariados():
+    pex = pkm.get_species("Toxapex")
+    poison_jab = get_move_by_name("Poison Jab")
+
+    # Default IV Toxapex: 4 / 11 / 14
+    # Rank 1 Toxapex: 0 / 15 / 15
+    pex_ivs = dmg.compute_iv_possibilities(pex, 1500)
+    default = pex_ivs[(4, 11, 14)]
+    rank1 = pex_ivs[(0, 15, 15)]
+
+    # Of the Ariados that have >= 127.8 attack, how much defense do
+    # we need to get the bulkpoint against these Toxapex?
+    ariados = pkm.get_species("Ariados")
+    ariados_ivs = dmg.compute_iv_possibilities(ariados, 1500)
+    viable_ariados = {ivs: mon for ivs, mon in ariados_ivs.items() if mon.attack_stat >= 127.18}
+
+    print("Rank 1 Toxapex vs. high-ish attack Ariados")
+    dmg.compute_bulkpoints(rank1, viable_ariados.values(), poison_jab, 1500)
+
+    print()
+    print("1/13/8 Toxapex vs. high-ish attack Ariados")
+    dmg.compute_bulkpoints(pex_ivs[(1, 13, 8)], viable_ariados.values(), poison_jab, 1500)
+
+    print()
+    print("3/12/15 Toxapex vs. high-ish attack Ariados")
+    dmg.compute_bulkpoints(pex_ivs[(3, 12, 15)], viable_ariados.values(), poison_jab, 1500)
+
+    print()
+    print("Default IV Toxapex vs. high-ish attack Ariados")
+    dmg.compute_bulkpoints(default, viable_ariados.values(), poison_jab, 1500)
+
+
+# pex_vs_ariados()
+
+
+def squag_vs_ariados():
+    quag = pkm.get_species("Quagsire", as_shadow=True)
+    mudshot = get_move_by_name("Mud Shot")
+
+    # Default IV Quag: 4 / 14 / 10
+    # Rank 1 Quag: 0 / 15 / 14
+    quag_ivs = dmg.compute_iv_possibilities(quag, 1500)
+    default = quag_ivs[(4, 14, 10)]
+    rank1 = quag_ivs[(0, 15, 14)]
+
+    # Of the Ariados that have >= 127.18 attack, how much defense do
+    # we need to get the bulkpoint against these Quag?
+    ariados = pkm.get_species("Ariados")
+    ariados_ivs = dmg.compute_iv_possibilities(ariados, 1500)
+    viable_ariados = {ivs: mon for ivs, mon in ariados_ivs.items() if mon.attack_stat >= 127.18}
+
+    print("Rank 1 S-Quag vs. high-ish attack Ariados")
+    dmg.compute_bulkpoints(rank1, viable_ariados.values(), mudshot, 1500)
+
+    print()
+    print("Default IV S-Quag vs. high-ish attack Ariados")
+    dmg.compute_bulkpoints(default, viable_ariados.values(), mudshot, 1500)
+
+
+squag_vs_ariados()
+
+
+def compute_ape_mirror():
     ape = pkm.get_species("Annihilape")
     clodsire = pkm.get_species("Clodsire")
     counter = get_move_by_name("Counter")
@@ -99,10 +179,10 @@ def compute_mirror():
     dmg.compute_breakpoints(ape, highest_defense(clod_killers), counter, 1500)
 
 
-# compute_mirror()
+# compute_ape_mirror()
 
 
-def compute_serperior_bulkpoints():
+def compute_ape_serperior_bulkpoints():
     ape = pkm.get_species("Annihilape")
     clod = pkm.get_species("Clodsire")
     serp = pkm.get_species("Serperior")
@@ -132,4 +212,4 @@ def compute_serperior_bulkpoints():
     dmg.compute_bulkpoints(slight_attack_serp, ape, vine_whip, 1500)
 
 
-# compute_serperior_bulkpoints()
+# compute_ape_serperior_bulkpoints()
